@@ -10,6 +10,9 @@ module com.project.hundirlaflota {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires Java.WebSocket;
+    requires org.jline;
+    requires org.json;
 
     opens com.project.hundirlaflota to javafx.fxml;
     exports com.project.hundirlaflota;
