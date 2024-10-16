@@ -1,4 +1,4 @@
-package com.project.hundirlaflota.Client;
+package com.Client;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

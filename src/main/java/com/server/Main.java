@@ -1,4 +1,4 @@
-package com.project.hundirlaflota.Server;
+package com.Server;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

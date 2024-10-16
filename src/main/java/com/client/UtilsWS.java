@@ -1,4 +1,4 @@
-package com.project.hundirlaflota.Client;
+package com.Client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
