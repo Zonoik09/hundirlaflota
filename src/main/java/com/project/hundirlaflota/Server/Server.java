@@ -1,4 +1,7 @@
-package com.project.hundirlaflota;
+package com.project.hundirlaflota.Server;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.java_websocket.server.WebSocketServer;
 import org.jline.reader.EndOfFileException;
@@ -15,6 +18,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Arrays;
 
 import org.json.JSONArray;
@@ -23,12 +27,13 @@ import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 public class Server extends WebSocketServer {
 
-    private static final List<String> CHARACTER_NAMES = Arrays.asList(
-        "Mario", "Luigi", "Peach", "Toad", "Bowser", "Wario", "Zelda", "Link"
-    );
+    private static final List<String> PLAYER_NAMES = Arrays.asList("A", "B");
 
     private Map<WebSocket, String> clients;
     private List<String> availableNames;
+    private Map<String, JSONObject> clientMousePositions = new HashMap<>();
+
+    private static Map<String, JSONObject> selectableObjects = new HashMap<>();
 
     public Server(InetSocketAddress address) {
         super(address);
@@ -37,7 +42,7 @@ public class Server extends WebSocketServer {
     }
 
     private void resetAvailableNames() {
-        availableNames = new ArrayList<>(CHARACTER_NAMES);
+        availableNames = new ArrayList<>(PLAYER_NAMES);
         Collections.shuffle(availableNames);
     }
 
@@ -47,6 +52,7 @@ public class Server extends WebSocketServer {
         clients.put(conn, clientName);
         System.out.println("WebSocket client connected: " + clientName);
         sendClientsList();
+        sendCowntdown();
     }
 
     private String getNextAvailableName() {
@@ -67,34 +73,32 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        String clientName = clients.get(conn);
         JSONObject obj = new JSONObject(message);
+
 
         if (obj.has("type")) {
             String type = obj.getString("type");
-            if (type.equals("bounce")) {
-                JSONObject rst = new JSONObject();
-                rst.put("type", "bounce");
-                rst.put("message", obj.getString("message"));
-                conn.send(rst.toString());
 
-            } else if (type.equals("broadcast")) {
-                JSONObject rst = new JSONObject();
-                rst.put("type", "broadcast");
-                rst.put("origin", clientName);
-                rst.put("message", obj.getString("message"));
+            switch (type) {
+                case "clientMouseMoving":
+                    // Obtenim el clientId del missatge
+                    String clientId = obj.getString("clientId");
+                    clientMousePositions.put(clientId, obj);
 
-                broadcastMessage(rst.toString(), conn);
+                    // Prepara el missatge de tipus 'serverMouseMoving' amb les posicions de tots els clients
+                    JSONObject rst0 = new JSONObject();
+                    rst0.put("type", "serverMouseMoving");
+                    rst0.put("positions", clientMousePositions);
 
-            } else if (type.equals("private")) {
-                String destination = obj.getString("destination");
-                JSONObject rst = new JSONObject();
-                rst.put("type", "private");
-                rst.put("origin", clientName);
-                rst.put("destination", destination);
-                rst.put("message", obj.getString("message"));
+                    // Envia el missatge a tots els clients connectats
+                    broadcastMessage(rst0.toString(), null);
+                    break;
+                case "clientSelectableObjectMoving":
+                    String objectId = obj.getString("objectId");
+                    selectableObjects.put(objectId, obj);
 
-                sendPrivateMessage(destination, rst.toString(), conn);
+                    sendServerSelectableObjects();
+                    break;
             }
         }
     }
@@ -187,6 +191,38 @@ public class Server extends WebSocketServer {
         }
     }
 
+    public void sendCowntdown() {
+        int requiredNumberOfClients = 2;
+        if (clients.size() == requiredNumberOfClients) {
+            for (int i = 5; i >= 0; i--) {
+                JSONObject msg = new JSONObject();
+                msg.put("type", "countdown");
+                msg.put("value", i);
+                broadcastMessage(msg.toString(), null);
+                if (i == 0) {
+                    sendServerSelectableObjects();
+                } else {
+                    try {
+                        Thread.sleep(750);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void sendServerSelectableObjects() {
+
+        // Prepara el missatge de tipus 'serverObjects' amb les posicions de tots els clients
+        JSONObject rst1 = new JSONObject();
+        rst1.put("type", "serverSelectableObjects");
+        rst1.put("selectableObjects", selectableObjects);
+
+        // Envia el missatge a tots els clients connectats
+        broadcastMessage(rst1.toString(), null);
+    }
+
     @Override
     public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
@@ -199,14 +235,58 @@ public class Server extends WebSocketServer {
         setConnectionLostTimeout(100);
     }
 
+    public static String askSystemName() {
+        StringBuilder resultat = new StringBuilder();
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("uname", "-r");
+            Process process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                resultat.append(line).append("\n");
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                return "Error: El procés ha finalitzat amb codi " + exitCode;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+        return resultat.toString().trim();
+    }
+
     public static void main(String[] args) {
-        int port = 3000; 
-        Server server = new Server(new InetSocketAddress(port));
+
+        String systemName = askSystemName();
+
+        // WebSockets server
+        Server server = new Server(new InetSocketAddress(3000));
         server.start();
 
         LineReader reader = LineReaderBuilder.builder().build();
-
         System.out.println("Server running. Type 'exit' to gracefully stop it.");
+
+        // Add objects
+        String name0 = "O0";
+        JSONObject obj0 = new JSONObject();
+        obj0.put("objectId", name0);
+        obj0.put("x", 300);
+        obj0.put("y", 50);
+        obj0.put("cols", 4);
+        obj0.put("rows", 1);
+        selectableObjects.put(name0, obj0);
+
+        String name1 = "O1";
+        JSONObject obj1 = new JSONObject();
+        obj1.put("objectId", name1);
+        obj1.put("x", 300);
+        obj1.put("y", 100);
+        obj1.put("cols", 1);
+        obj1.put("rows", 3);
+        selectableObjects.put(name1, obj1);
 
         try {
             while (true) {
