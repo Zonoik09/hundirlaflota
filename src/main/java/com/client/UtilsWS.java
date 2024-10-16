@@ -1,4 +1,4 @@
-package com.Client;
+package com.client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;

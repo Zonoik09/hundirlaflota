@@ -1,4 +1,4 @@
-package com.Server;
+package com.server;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
-public class Server extends WebSocketServer {
+public class Main extends WebSocketServer {
 
     private static final List<String> PLAYER_NAMES = Arrays.asList("A", "B");
 
@@ -35,7 +35,7 @@ public class Server extends WebSocketServer {
 
     private static Map<String, JSONObject> selectableObjects = new HashMap<>();
 
-    public Server(InetSocketAddress address) {
+    public Main(InetSocketAddress address) {
         super(address);
         clients = new ConcurrentHashMap<>();
         resetAvailableNames();
@@ -74,22 +74,22 @@ public class Server extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         JSONObject obj = new JSONObject(message);
-
-
+    
+        
         if (obj.has("type")) {
             String type = obj.getString("type");
-
+    
             switch (type) {
                 case "clientMouseMoving":
                     // Obtenim el clientId del missatge
-                    String clientId = obj.getString("clientId");
+                    String clientId = obj.getString("clientId");   
                     clientMousePositions.put(clientId, obj);
-
+        
                     // Prepara el missatge de tipus 'serverMouseMoving' amb les posicions de tots els clients
                     JSONObject rst0 = new JSONObject();
                     rst0.put("type", "serverMouseMoving");
                     rst0.put("positions", clientMousePositions);
-
+        
                     // Envia el missatge a tots els clients connectats
                     broadcastMessage(rst0.toString(), null);
                     break;
@@ -102,7 +102,7 @@ public class Server extends WebSocketServer {
             }
         }
     }
-
+   
     private void broadcastMessage(String message, WebSocket sender) {
         for (Map.Entry<WebSocket, String> entry : clients.entrySet()) {
             WebSocket conn = entry.getKey();
@@ -222,7 +222,7 @@ public class Server extends WebSocketServer {
         // Envia el missatge a tots els clients connectats
         broadcastMessage(rst1.toString(), null);
     }
-
+   
     @Override
     public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
@@ -263,9 +263,9 @@ public class Server extends WebSocketServer {
         String systemName = askSystemName();
 
         // WebSockets server
-        Server server = new Server(new InetSocketAddress(3000));
+        Main server = new Main(new InetSocketAddress(3000));
         server.start();
-
+        
         LineReader reader = LineReaderBuilder.builder().build();
         System.out.println("Server running. Type 'exit' to gracefully stop it.");
 
