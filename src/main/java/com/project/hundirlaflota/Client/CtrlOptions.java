@@ -1,5 +1,4 @@
 package com.project.hundirlaflota.Client;
 
-public class Controller {
-    
+public class CtrlOptions {
 }
