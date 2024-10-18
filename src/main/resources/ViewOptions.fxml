@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.hundirlaflota.Client.CtrlOptions">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-2.0" prefHeight="138.0" prefWidth="1280.0" style="-fx-background-color: lightblue;" text="Configuración" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold Italic" size="47.0" />
+         </font>
+      </Label>
+      <TextField fx:id="protocol" layoutX="499.0" layoutY="227.0" prefHeight="26.0" prefWidth="300.0" text="wss">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="177.0" text="Protocol">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="serverIP" layoutX="499.0" layoutY="357.0" prefHeight="26.0" prefWidth="300.0" text="dartiagaperez.ieti.site">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="307.0" text="Server IP">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="port" layoutX="499.0" layoutY="487.0" prefHeight="26.0" prefWidth="300.0" text="443">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="437.0" text="Port">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Button fx:id="saveButton" alignment="CENTER" contentDisplay="CENTER" layoutX="592.0" layoutY="562.0" mnemonicParsing="false" onAction="#changeView" style="-fx-background-color: lightblue;" text="Save" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold Italic" size="30.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
