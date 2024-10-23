@@ -27,6 +27,8 @@ import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 public class Server extends WebSocketServer {
 
+
+    // Cambiar a una variable que recoge el nombre cuando pulsan el search.
     private static final List<String> PLAYER_NAMES = Arrays.asList("A", "B");
 
     private Map<WebSocket, String> clients;

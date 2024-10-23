@@ -14,12 +14,15 @@ public class CtrlOptions {
     @FXML
     private TextField port;
 
+    public void initialize() {
+        getConfigProxmox();
+    }
+
     @FXML
     private void setConfigProxmox(String txtProtocol,String txtServerip, String txtPort) {
         protocol.setText(txtProtocol);
         serverIP.setText(txtServerip);
         port.setText(txtPort);
-        System.out.println("Ha cambiado la config");
     }
 
     @FXML

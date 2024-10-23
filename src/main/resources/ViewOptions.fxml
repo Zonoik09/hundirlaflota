@@ -4,31 +4,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.hundirlaflota.Client.CtrlOptions">
-   <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <TextField layoutX="440.0" layoutY="135.0" prefHeight="53.0" prefWidth="385.0" promptText="Escribe aqui tu nombre!">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </TextField>
-            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="566.0" layoutY="237.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="134.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Buscar Oponente" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="15.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-   </center>
-   <top>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="131.0" prefWidth="1337.0" style="-fx-background-color: lightblue;" text="Hundir La Flota" BorderPane.alignment="CENTER">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.hundirlaflota.Client.CtrlOptions">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-2.0" prefHeight="138.0" prefWidth="1280.0" style="-fx-background-color: lightblue;" text="ConfiguraciÃ³n" textAlignment="CENTER">
          <font>
-            <Font name="System Bold" size="88.0" />
+            <Font name="System Bold Italic" size="47.0" />
          </font>
       </Label>
-   </top>
-</BorderPane>
+      <TextField fx:id="protocol" layoutX="499.0" layoutY="227.0" prefHeight="26.0" prefWidth="300.0" text="wss">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="177.0" text="Protocol">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="serverIP" layoutX="499.0" layoutY="357.0" prefHeight="26.0" prefWidth="300.0" text="dartiagaperez.ieti.site">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="307.0" text="Server IP">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="port" layoutX="499.0" layoutY="487.0" prefHeight="26.0" prefWidth="300.0" text="443">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label layoutX="499.0" layoutY="437.0" text="Port">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Button fx:id="saveButton" alignment="CENTER" contentDisplay="CENTER" layoutX="592.0" layoutY="562.0" mnemonicParsing="false" onAction="#changeView" style="-fx-background-color: lightblue;" text="Save" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold Italic" size="30.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
